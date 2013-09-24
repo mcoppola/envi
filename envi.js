@@ -10,9 +10,8 @@ function Envi (context, width, height, size) {
 	this.shiftX = 1;  // adjustable perspective shift
 	this.shiftY = 1;
 
-	
 	this.font = 'sans-serif';
-	this.fontMax = 24; 
+	this.fontMax = 50; 
 	this.fontStyle = ''; // include space at end if using
 }
 
@@ -40,35 +39,38 @@ function Scene (envi, assets) {
 // Main game function
 Scene.prototype.play = function () {
 	// draw all assets in scene
-
 	this.envi.context.clearRect(0, 0, canvas.width, canvas.height);
-	for (i = 0; i < this.assets.length; i+=1) {
+	for (var i = 0; i < this.assets.length; i+=1) {
 		this.assets[i].draw(this.envi);
 	}
 }
 
 // Object of Scene
-function Asset (x, y, z, geometry) {
+function Asset (id, x, y, z, geometry, scale) {
 /*	if (geometry === undefined) { geometry = []; }
 	if (x === undefined) { x = 0; }
 	if (y === undefined) { y = 0; }
 	if (z === undefined) { z = 0; }*/
+	if (scale === undefined) { scale = 1; }
+	this.id = id;
 	this.geo = geometry;  //array of geometric coordinates and character value
 	this.xpos = x;
 	this.ypos = y;
 	this.zpos = z;
-
+	this.scale = scale;
 }
 
 Asset.prototype.draw = function (envi) {
 	for (i = 0; i < this.geo.length; i+=1) {
 		var point = this.geo[i];
-		point[0] = this.xpos + point[0]; // xpos + geometry
-		point[1] = this.ypos + point[1]; // ypos + geometry
-		point[2] = this.zpos + point[2]; // zpos + geometry
+		var newPoint = [];
+		newPoint[0] = this.xpos + point[0]*this.scale; // xpos + geometry
+		newPoint[1] = this.ypos + point[1]*this.scale; // ypos + geometry
+		newPoint[2] = this.zpos + point[2]*this.scale; // zpos + geometry
+		newPoint[3] = point[3];
 
-		var xy = envi.pointTo3D(point);
-		var charWithFont = envi.charToSize(point[3], point[2]);
+		var xy = envi.pointTo3D(newPoint);
+		var charWithFont = envi.charToSize(newPoint[3], newPoint[2]);
 		envi.context.font = String(charWithFont[1].toString());
 		envi.context.strokeText(charWithFont[0], xy[0], xy[1])
 

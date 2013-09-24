@@ -6,45 +6,41 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <canvas id='canvas' width='500' height='500'></canvas>
-
+    <canvas id='canvas'></canvas>
     <script src="utils.js"></script>
     <script src="envi.js"></script>
+    <script src="models.js"></script>
     <script>
       utils.setCanvas(window);
       window.onload = function () {
 
+        var Keyboard = {
+            keys : {},
+            keyPress : function (evt) {
+                if (this.keys[evt.keyCode] > 0) { return; }
+                this.keys[evt.keyCode] = evt.timeStamp || (new Date()).getTime();
+            },
+            keyRelease : function (evt) {
+                this.keys[evt.keyCode] = 0;
+            }
+        };
+        window.addEventListener("keydown", Keyboard.keyPress.bind(Keyboard));
+        window.addEventListener("keyup", Keyboard.keyRelease.bind(Keyboard));
+
         var canvas = document.getElementById('canvas'),
-        context = canvas.getContext('2d'),
-        envi = new Envi(context, canvas.width, canvas.height);
-
-        // Arrow Keys Shift Perspective
-        window.addEventListener('keypress', function (e) {
-          if (e.keyCode == 39) {
-            if(envi.shiftX < 1.9) { envi.shiftX += 0.05; }              
-          }
-          else if (e.keyCode == 37) {
-              if(envi.shiftX > 0.1) { envi.shiftX -= 0.05; }  
-          }
-          else if (e.keyCode == 38) {
-              if(envi.shiftY > 0.2) { envi.shiftY -= 0.05; }
-          }
-          else if (e.keyCode == 40) {
-              if(envi.shiftY < 1.9) { envi.shiftY += 0.05; }
-          }
-        }, false);
-
-
-        // Put in models class
-        var box = [[0,0,0,'.'], [10,0,0,'.'], [10,10,0,'.'], [0,10,0,'.'],
-            [0,0,10,'.'], [10,0,10,'.'], [10,10,10,'.'], [0,10,10,'.']];
-
-        var grid = [[0,0,100,'*'], [canvas.width,0,100,'*'], [0,canvas.height,100, '*'], [canvas.width,canvas.height,100,'*'], [0,0,200,'*'], [canvas.width,0,200,'*'], [0,canvas.height,200, '*'], [canvas.width,canvas.height,200,'*'], [0,0,300,'*'], [canvas.width,0,300,'*'], [0,canvas.height,300, '*'], [canvas.width,canvas.height,300,'*'], [0,0,400,'*'], [canvas.width,0,400,'*'], [0,canvas.height,400, '*'], [canvas.width,canvas.height,400,'*']];
+        context = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var models = new Models();
+        envi = new Envi(context, canvas.width, canvas.height, canvas.width);
         
-        var myGrid = new Asset(0, 0, 0, grid);
-        var myBox = new Asset(100, 100, 0, box);
+        var myGrid = new Asset('grid', 0, 0, 0, models.grid);
+        var myBox = new Asset('box', 100, 500, 50, models.box, 30);
+        var diamond = new Asset('diamond', 500, 200, 100, models.diamond, 40);
+        var dB = new Asset('db', 800, 400, 900, models.diamond, 40);
 
-        var assets = [myGrid, myBox];
+
+        var assets = [diamond, dB];
 
         scene = new Scene(envi, assets);
       
@@ -52,6 +48,20 @@
       (function drawFrame () {
         utils.getAnimationFrame();
         window.requestAnimationFrame(drawFrame, canvas);
+
+        //Perspective without keyboard debounce
+        if (Keyboard.keys[39] > 0) {
+            if(envi.shiftX < 1.9) { envi.shiftX += 0.01; }              
+          }
+        if (Keyboard.keys[37] > 0) {
+            if(envi.shiftX > 0.1) { envi.shiftX -= 0.01; }  
+        }
+        if (Keyboard.keys[38] > 0) {
+            if(envi.shiftY > 0.2) { envi.shiftY -= 0.01; }
+        }
+        if (Keyboard.keys[40] > 0) {
+            if(envi.shiftY < 1.9) { envi.shiftY += 0.01; }
+        }
 
 
         scene.play();
