@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset = "utf-8">
+    <title>envi</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <canvas id='canvas' width='500' height='500'></canvas>
+
+    <script src="utils.js"></script>
+    <script src="envi.js"></script>
+    <script>
+      utils.setCanvas(window);
+      window.onload = function () {
+
+        var canvas = document.getElementById('canvas'),
+        context = canvas.getContext('2d'),
+        envi = new Envi(context, canvas.width, canvas.height);
+
+        // Arrow Keys Shift Perspective
+        window.addEventListener('keypress', function (e) {
+          if (e.keyCode == 39) {
+            if(envi.shiftX < 1.9) { envi.shiftX += 0.05; }              
+          }
+          else if (e.keyCode == 37) {
+              if(envi.shiftX > 0.1) { envi.shiftX -= 0.05; }  
+          }
+          else if (e.keyCode == 38) {
+              if(envi.shiftY > 0.2) { envi.shiftY -= 0.05; }
+          }
+          else if (e.keyCode == 40) {
+              if(envi.shiftY < 1.9) { envi.shiftY += 0.05; }
+          }
+        }, false);
+
+
+        // Put in models class
+        var box = [[0,0,0,'.'], [10,0,0,'.'], [10,10,0,'.'], [0,10,0,'.'],
+            [0,0,10,'.'], [10,0,10,'.'], [10,10,10,'.'], [0,10,10,'.']];
+
+        var grid = [[0,0,100,'*'], [canvas.width,0,100,'*'], [0,canvas.height,100, '*'], [canvas.width,canvas.height,100,'*'], [0,0,200,'*'], [canvas.width,0,200,'*'], [0,canvas.height,200, '*'], [canvas.width,canvas.height,200,'*'], [0,0,300,'*'], [canvas.width,0,300,'*'], [0,canvas.height,300, '*'], [canvas.width,canvas.height,300,'*'], [0,0,400,'*'], [canvas.width,0,400,'*'], [0,canvas.height,400, '*'], [canvas.width,canvas.height,400,'*']];
+        
+        var myGrid = new Asset(0, 0, 0, grid);
+        var myBox = new Asset(100, 100, 0, box);
+
+        var assets = [myGrid, myBox];
+
+        scene = new Scene(envi, assets);
+      
+
+      (function drawFrame () {
+        utils.getAnimationFrame();
+        window.requestAnimationFrame(drawFrame, canvas);
+
+
+        scene.play();
+        //context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+      }());
+    };
+    </script>
+  </body>
+  </html>
