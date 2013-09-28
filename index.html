@@ -35,12 +35,24 @@
         envi = new Envi(context, canvas.width, canvas.height, canvas.width);
         
         var myGrid = new Asset('grid', 0, 0, 0, models.grid);
-        var myBox = new Asset('box', 100, 500, 50, models.box, 30);
-        var diamond = new Asset('diamond', 500, 200, 100, models.diamond, 40);
-        var dB = new Asset('db', 800, 400, 900, models.diamond, 40);
+
+        var dA = new Asset('da', 600*Math.random(), 400*Math.random(), 100*Math.random(), models.diamond, 30);
+        var dB = new Asset('db', 100*Math.random(), 400*Math.random(), canvas.width/2, models.diamond, 30);
+
+        var palm = new Asset('palm', 900, canvas.height-350, 800, models.palmTree, 30);
+
+        var flower = new Asset('flower', 500, 600, 100, models.flower, 20);
 
 
-        var assets = [diamond, dB];
+        var assets = [];
+        for(var i=0; i < 40; i+=1) {
+            assets[i]= new Asset('flower', canvas.width*2*Math.random() - 100, canvas.height - 200 - 5*Math.random(), canvas.width*Math.random(), models.flower, 20)
+        }
+
+        assets[40] = dA;
+        assets[41] = dB;
+        assets[42] = palm;
+        
 
         scene = new Scene(envi, assets);
       
@@ -51,19 +63,20 @@
 
         //Perspective without keyboard debounce
         if (Keyboard.keys[39] > 0) {
-            if(envi.shiftX < 1.9) { envi.shiftX += 0.01; }              
+            if(envi.shiftX < 2.2) { envi.shiftX += 0.025; }              
           }
         if (Keyboard.keys[37] > 0) {
-            if(envi.shiftX > 0.1) { envi.shiftX -= 0.01; }  
+            if(envi.shiftX > 0.0) { envi.shiftX -= 0.025; }  
         }
         if (Keyboard.keys[38] > 0) {
-            if(envi.shiftY > 0.2) { envi.shiftY -= 0.01; }
+            if(envi.shiftY > -0.5) { envi.shiftY -= 0.025; }
         }
         if (Keyboard.keys[40] > 0) {
-            if(envi.shiftY < 1.9) { envi.shiftY += 0.01; }
+            if(envi.shiftY < 2.4) { envi.shiftY += 0.025; }
         }
 
-
+        if(envi.shiftX < 2.2) { envi.shiftX +=0.001;}
+        else { envi.shiftX -= 0.001}
         scene.play();
         //context.clearRect(0, 0, canvas.width, canvas.height);
 

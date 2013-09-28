@@ -1,4 +1,3 @@
-
 // 3D Canvas Enviroment, keeps dimentions 
 // and calculates scale of objects
 function Envi (context, width, height, size) {
@@ -7,8 +6,8 @@ function Envi (context, width, height, size) {
 	this.context = context;  // canvas context
 	this.width = width;  // canvas pixel dimmentions
 	this.height = height;
-	this.shiftX = 1;  // adjustable perspective shift
-	this.shiftY = 1;
+	this.shiftX = 1;  // perspective shift
+	this.shiftY = 1.5;  // starting conditions
 
 	this.font = 'sans-serif';
 	this.fontMax = 50; 
@@ -26,7 +25,7 @@ Envi.prototype.pointTo3D = function (point) {
 Envi.prototype.charToSize = function (char, z) {
 	var fontSize = this.fontMax*((this.depth - z)/this.depth);
 	var fontString = Math.round(fontSize).toString() + 'px ';
-	return [String(char), String(fontString + this.font)];
+	return [String(char), String(this.fontStyle + fontString + this.font)];
 }
 
 // Scene contains all objects(assets)
@@ -50,14 +49,14 @@ function Asset (id, x, y, z, geometry, scale) {
 /*	if (geometry === undefined) { geometry = []; }
 	if (x === undefined) { x = 0; }
 	if (y === undefined) { y = 0; }
-	if (z === undefined) { z = 0; }*/
+	if (z === undefined) { z = 0; }  */
 	if (scale === undefined) { scale = 1; }
 	this.id = id;
 	this.geo = geometry;  //array of geometric coordinates and character value
 	this.xpos = x;
 	this.ypos = y;
 	this.zpos = z;
-	this.scale = scale;
+	this.scale = scale;	
 }
 
 Asset.prototype.draw = function (envi) {
