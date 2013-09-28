@@ -45,13 +45,13 @@
 
 
         var assets = [];
-        for(var i=0; i < 40; i+=1) {
+        for(var i=0; i < 30; i+=1) {
             assets[i]= new Asset('flower', canvas.width*2*Math.random() - 100, canvas.height - 200 - 5*Math.random(), canvas.width*Math.random(), models.flower, 20)
         }
 
-        assets[40] = dA;
-        assets[41] = dB;
-        assets[42] = palm;
+        assets[30] = dA;
+        assets[31] = dB;
+        assets[32] = palm;
         
 
         scene = new Scene(envi, assets);
