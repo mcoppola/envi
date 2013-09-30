@@ -40,9 +40,8 @@
         var dA = new Asset('da', 600*Math.random(), 400*Math.random(), 100*Math.random(), models.diamond, 30);
         var dB = new Asset('db', 100*Math.random(), 400*Math.random(), canvas.width/2, models.diamond, 30);
 
-
-        dA.attributes = {"pulse_scale": new pulse_scale(10,1)};
-
+        
+        //dA.attributes = {"pulse_scale": new pulse_scale(10,1)};
 
         var palm = new Asset('palm', 900, canvas.height-350, 800, models.palmTree, 30);
 
@@ -50,13 +49,13 @@
 
 
         var assets = [];
- /*       for(var i=0; i < 30; i+=1) {
+        for(var i=0; i < 30; i+=1) {
             assets[i]= new Asset('flower', canvas.width*2*Math.random() - 100, canvas.height - 200 - 5*Math.random(), canvas.width*Math.random(), models.flower, 20)
-        }*/
+        }
 
-        assets[0] = dA;
-        assets[1] = dB;
-/*        assets[32] = palm;*/
+        assets[30] = dA;
+        assets[31] = dB;
+        assets[32] = palm;
         
 
         scene = new Scene(envi, assets);

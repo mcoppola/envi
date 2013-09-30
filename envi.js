@@ -22,18 +22,11 @@ Envi.prototype.pointTo3D = function (point) {
 }
 Envi.prototype.doAnimation = function (point, attributes) {
 	// PULSE_SCALE [scale, speed, state_counter]
-
-	if(attributes["pulse_scale"] != null) {
-		for (var i=0; i < point.length;	 i+=1) {
-			point[i] = point[i] + attributes["pulse_scale"[1]*attributes["pulse_scale"[2]];
-		}
-		if (attributes["pulse_scale".[0]] > attributes["pulse_scale"[2]]) {
-			attributes["pulse_scale"[2]] += 1;
-		}
-		else {
-			attributes["pulse_scale"[2]] = 0;
-		}
+	if (attributes["pulse_scale"] != null) {
+		point = attributes["pulse_scale"].processPoint(point);
 	}
+
+	return point;
 }
 
 // Returns Array of Char and Font String
@@ -53,7 +46,7 @@ function Scene (envi, assets) {
 // Main game function
 Scene.prototype.play = function () {
 	// draw all assets in scene
-	this.envi.context.clearRect(0, 0, canvas.width, canv as.height);
+	this.envi.context.clearRect(0, 0, canvas.width, canvas.height);
 	for (var i = 0; i < this.assets.length; i+=1) {
 		this.assets[i].draw(this.envi);
 	}
