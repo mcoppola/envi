@@ -8,10 +8,10 @@ function Envi (context, width, height, size) {
 	this.height = height;
 	this.shiftX = 1;  // perspective shift
 	this.shiftY = 1.5;  // starting conditions
-	this.animations = new Animations ();
 	this.font = 'sans-serif';
 	this.fontMax = 50; 
 	this.fontStyle = ''; // include space at end if using
+	this.frame = [this.width, this.height, this.depth];
 }
 
 // Vanishing Point Perspective convertion
@@ -20,12 +20,10 @@ Envi.prototype.pointTo3D = function (point) {
 	var y = (point[1] + ((point[2]/this.depth)*((this.height*this.shiftY/2)-point[1])));
 	return [x, y];
 }
-Envi.prototype.doAnimation = function (point, attributes) {
-	// PULSE_SCALE [scale, speed, state_counter]
-	if (attributes["pulse_scale"] != null) {
-		point = attributes["pulse_scale"].processPoint(point);
-	}
-
+Envi.prototype.doAnimation = function (point, attributes, obj_scale) {
+	for (var i = 0; i < attributes.length; i+=1) {
+		point = attributes[i].processPoint(this.frame, point, obj_scale);
+	}	
 	return point;
 }
 
@@ -65,25 +63,37 @@ function Asset (id, x, y, z, geometry, scale) {
 	this.ypos = y;
 	this.zpos = z;
 	this.scale = scale;
-	this.attributes = {};	
+	this.attributes = [];	
 }
 
 Asset.prototype.draw = function (envi) {
 	for (i = 0; i < this.geo.length; i+=1) {
-		var point = this.geo[i];
-		var newPoint = [];
-		newPoint[0] = this.xpos + point[0]*this.scale; // xpos + geometry
-		newPoint[1] = this.ypos + point[1]*this.scale; // ypos + geometry
-		newPoint[2] = this.zpos + point[2]*this.scale; // zpos + geometry
-		newPoint[3] = point[3];
-
-		newPoint = envi.doAnimation(newPoint, this.attributes);
-
-		var xy = envi.pointTo3D(newPoint);
-		var charWithFont = envi.charToSize(newPoint[3], newPoint[2]);
+		var point = [];
+		point = this.setModelPos(this.geo[i]);
+		point = envi.doAnimation(point, this.attributes, this.scale);
+		point = this.moveToScenePos(point);
+		
+		var xy = envi.pointTo3D(point);
+		var charWithFont = envi.charToSize(point[3], point[2]);
 		envi.context.font = String(charWithFont[1].toString());
 		envi.context.strokeText(charWithFont[0], xy[0], xy[1])
 
 	}
 
+}
+Asset.prototype.setModelPos = function (point) {
+	var newPoint = [];
+	newPoint[0] = point[0]*this.scale; // geometry
+	newPoint[1] = point[1]*this.scale; // geometry
+	newPoint[2] = point[2]*this.scale; // geometry
+	newPoint[3] = point[3];
+	return newPoint;
+}
+Asset.prototype.moveToScenePos = function (point) {
+	var newPoint = [];
+	newPoint[0] = this.xpos + point[0]; // xpos + geometry
+	newPoint[1] = this.ypos + point[1]; // ypos + geometry
+	newPoint[2] = this.zpos + point[2]; // zpos + geometry
+	newPoint[3] = point[3];
+	return newPoint
 }
