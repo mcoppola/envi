@@ -61,13 +61,12 @@ explode_infinite.prototype.processPoint = function (frame, point, obj_scale) {
 	return point;
 }
 
-function house_fly (model, speed, range, origin, slave) {
+function house_fly (speed, range, slave) {
 	if (slave === undefined) {slave = false}
-	this.model = model;
 	this.speed = speed;
 	this.range = range;
-	this.origin = origin;
 	this.slave = slave;
+	this.direction = [1, 1, 1];
 }
 
 house_fly.prototype.processPoint = function (frame, point, obj_scale) {
@@ -76,7 +75,10 @@ house_fly.prototype.processPoint = function (frame, point, obj_scale) {
 		for (var i = 0; i < point.length - 1; i+=1){
 			var dist = frame[i] - point[i];
 				if(dist < frame[i]*Math.random()) {
-					point[i] = point[i] + this.speed;
+					point[i] = point[i] + this.speed*this.direction[i];
+				}
+				else {
+					this.direction[i] = this.direction[i]*-1;
 				}
 			
 		}

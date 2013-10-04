@@ -72,7 +72,6 @@ Asset.prototype.draw = function (envi) {
 		point = this.setModelPos(this.geo[i]);
 		point = envi.doAnimation(point, this.attributes, this.scale);
 		point = this.moveToScenePos(point);
-		
 		var xy = envi.pointTo3D(point);
 		var charWithFont = envi.charToSize(point[3], point[2]);
 		envi.context.font = String(charWithFont[1].toString());
