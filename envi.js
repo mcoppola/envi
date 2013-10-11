@@ -2,7 +2,7 @@
 // and calculates scale of objects
 function Envi (context, width, height, size) {
 	if (size === undefined) { size = 500; }
-	this.depth = size;  // dimention of cubic area
+	this.depth = size;  // z depth
 	this.context = context;  // canvas context
 	this.width = width;  // canvas pixel dimmentions
 	this.height = height;
@@ -20,9 +20,9 @@ Envi.prototype.pointTo3D = function (point) {
 	var y = (point[1] + ((point[2]/this.depth)*((this.height*this.shiftY/2)-point[1])));
 	return [x, y];
 }
-Envi.prototype.doAnimation = function (point, attributes, obj_scale) {
-	for (var i = 0; i < attributes.length; i+=1) {
-		point = attributes[i].processPoint(this.frame, point, obj_scale);
+Envi.prototype.doModelAnimation = function (point, asset) {
+	for (var i = 0; i < asset.modelAttributes.length; i+=1) {
+		point = asset.modelAttributes[i].processPoint(this.frame, point, asset);
 	}	
 	return point;
 }
@@ -62,25 +62,28 @@ function Asset (id, x, y, z, geometry, scale) {
 	this.xpos = x;
 	this.ypos = y;
 	this.zpos = z;
+	this.pos = [this.xpos, this.ypos, this.zpos];
 	this.scale = scale;
-	this.attributes = [];	
+	this.modelAttributes = [];	
+	this.sceneAttributes = [];
 }
 
 Asset.prototype.draw = function (envi) {
+	this.doSceneAnimation(envi.frame);
 	for (i = 0; i < this.geo.length; i+=1) {
 		var point = [];
-		point = this.setModelPos(this.geo[i]);
-		point = envi.doAnimation(point, this.attributes, this.scale);
+		point = this.setModelScale(this.geo[i]);
+		point = envi.doModelAnimation(point, this);
 		point = this.moveToScenePos(point);
+		//point = envi.doSceneAnimation(point, this);
 		var xy = envi.pointTo3D(point);
 		var charWithFont = envi.charToSize(point[3], point[2]);
 		envi.context.font = String(charWithFont[1].toString());
-		envi.context.strokeText(charWithFont[0], xy[0], xy[1])
+		envi.context.strokeText(charWithFont[0], xy[0], xy[1]);
 
 	}
-
 }
-Asset.prototype.setModelPos = function (point) {
+Asset.prototype.setModelScale = function (point) {
 	var newPoint = [];
 	newPoint[0] = point[0]*this.scale; // geometry
 	newPoint[1] = point[1]*this.scale; // geometry
@@ -90,9 +93,21 @@ Asset.prototype.setModelPos = function (point) {
 }
 Asset.prototype.moveToScenePos = function (point) {
 	var newPoint = [];
-	newPoint[0] = this.xpos + point[0]; // xpos + geometry
-	newPoint[1] = this.ypos + point[1]; // ypos + geometry
-	newPoint[2] = this.zpos + point[2]; // zpos + geometry
+	for (var i = 0; i < this.pos.length; i+=1){ 
+		newPoint[i] = this.pos[i] + point[i]; // pos + geometry
+	}
 	newPoint[3] = point[3];
-	return newPoint
+	return newPoint;
 }
+Asset.prototype.doSceneAnimation = function (frame) {
+	for (var i = 0; i < this.sceneAttributes.length; i+=1) {
+		this.sceneAttributes[i].processPoint(this, frame);
+	}
+}
+/*Asset.prototype.saveModelPos = function (pos) {
+	//console.log("point 0 : " + point[0].toString());
+	this.xpos = point[0]/this.scale;
+	this.ypos = point[1]/this.scale;
+	this.zpos = point[2]/this.scale;
+
+}*/
