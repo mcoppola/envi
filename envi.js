@@ -72,13 +72,19 @@ Asset.prototype.draw = function (envi) {
 	this.doSceneAnimation(envi.frame);
 	for (i = 0; i < this.geo.length; i+=1) {
 		var point = [];
+		//console.log(this.geo[i][4]);
 		point = this.setModelScale(this.geo[i]);
 		point = envi.doModelAnimation(point, this);
 		point = this.moveToScenePos(point);
-		//point = envi.doSceneAnimation(point, this);
 		var xy = envi.pointTo3D(point);
 		var charWithFont = envi.charToSize(point[3], point[2]);
 		envi.context.font = String(charWithFont[1].toString());
+		if (this.geo[i][4]) {
+			envi.context.strokeStyle = this.geo[i][4].toString();}
+		else {
+			envi.context.strokeStyle = '#000000'
+		}
+		//envi.context.strokeStyle = String(point[4].toString());
 		envi.context.strokeText(charWithFont[0], xy[0], xy[1]);
 
 	}
@@ -89,6 +95,10 @@ Asset.prototype.setModelScale = function (point) {
 	newPoint[1] = point[1]*this.scale; // geometry
 	newPoint[2] = point[2]*this.scale; // geometry
 	newPoint[3] = point[3];
+	
+/*	if (point[4] === undefined) {newPoint[4] = '#000000'}
+		else { newPoint[4] = point[4] }*/
+	
 	return newPoint;
 }
 Asset.prototype.moveToScenePos = function (point) {
@@ -97,6 +107,7 @@ Asset.prototype.moveToScenePos = function (point) {
 		newPoint[i] = this.pos[i] + point[i]; // pos + geometry
 	}
 	newPoint[3] = point[3];
+	newPoint[4] = point[4];
 	return newPoint;
 }
 Asset.prototype.doSceneAnimation = function (frame) {
