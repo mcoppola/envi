@@ -45,10 +45,10 @@
         var dB = new Asset('db', 100*Math.random(), 400*Math.random(), canvas.width/2, models.diamond, 30);*/
 
 
-/*        var dC = new Asset('db', canvas.width/2 -100, canvas.height/2 -300, 620, models.diamond, 25);
+/*        var dC = new Asset('db', canvas.width/2 -100, canvas.height/2 -300, 620, models.diamond, 25);*/
         canvas.addEventListener('mousedown', function() {
             dC.modelAttributes[dC.modelAttributes.length] = new explode_infinite(10, 300*Math.random(), 1);
-        }, false);*/
+        }, false);
     
         
         var fly = new Asset('fly', 300, 200, 800, models.fly, 12);
@@ -58,7 +58,10 @@
         fly2.sceneAttributes[0] = new house_fly(6, canvas.width);
 
 
-        var sun = new Asset('sun', canvas.width-250, 100, 200, models.sun, 1);
+        var sun = new Asset('sun', canvas.width-250, 100, 300, models.sun, 12);
+        canvas.addEventListener('mousedown', function() {
+            sun.modelAttributes[0] = new explode_infinite(10, 300*Math.random(), 1);
+            }, false);
 
 
 
@@ -97,8 +100,8 @@
             if(envi.shiftY < 2.4) { envi.shiftY += 0.025; }
         }
 
-        if(envi.shiftX < 2.2) { envi.shiftX +=0.001;}
-        else { envi.shiftX -= 0.001}
+        if(envi.shiftX < 5) { envi.shiftX +=0.001;}
+        else { envi.shiftX -= 4.9}
         scene.play();
         //context.clearRect(0, 0, canvas.width, canvas.height);
 
