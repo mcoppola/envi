@@ -6,8 +6,8 @@ function Envi (context, width, height, size) {
 	this.context = context;  // canvas context
 	this.width = width;  // canvas pixel dimmentions
 	this.height = height;
-	this.shiftX = .5;  // perspective shift
-	this.shiftY = 1.5;  // starting conditions
+	this.shiftX = 1;  // perspective shift
+	this.shiftY = 1;  // starting conditions
 	this.font = 'sans-serif';
 	this.fontMax = 50; 
 	this.fontStyle = ''; // include space at end if using

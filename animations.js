@@ -67,3 +67,38 @@ house_fly.prototype.processPoint = function (asset, frame) {
 	// save position
 	}
 }
+
+function wind_stream (speed) {
+	this.speed = speed;
+	this.diry = 1;
+	this.timey = 0.1;
+	this.shifti = 1;
+}
+wind_stream.prototype.processPoint = function (asset, frame) {
+
+	asset.pos[0] += this.speed;
+	if (1 < this.timey) {
+		this.diry = this.diry*(-1);
+		this.timey = 0;
+	}
+	else {
+		this.timey += 0.01;
+	}
+	if (Math.random() < .5 ) {
+		asset.ypos += this.diry*this.speed;
+	}
+	if (this.shifti < asset.geo.length + 1) {
+		this.shifti += 1;
+	} else {
+		this.shifti = 1;
+	}
+}
+
+function arrow_straight (speed) {
+	this.speed = speed;
+
+}
+arrow_straight.prototype.processPoint = function (asset, frame) {
+	asset.pos[2] += this.speed;
+
+}
