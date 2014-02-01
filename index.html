@@ -7,6 +7,7 @@
   </head>
   <body>
     <canvas id='canvas'></canvas>
+    <canvas id='dummy'></canvas>
     <script src="utils.js"></script>
     <script src="envi.js"></script>
     <script src="animations.js"></script>
@@ -29,23 +30,24 @@
         window.addEventListener("keyup", Keyboard.keyRelease.bind(Keyboard));
 
         var canvas = document.getElementById('canvas'),
-        context = canvas.getContext('2d');
+            dummyCanvas = document.getElementById('dummy'),
+            context = canvas.getContext('2d'),
+            dummyContext = dummy.getConext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         mouse = utils.captureMouse(canvas);
 
         var models = new Models();
-        envi = new Envi(context, canvas.width, canvas.height, canvas.width);
+        envi = new Envi(context, canvas.width, canvas.height, canvas.width, dummyContext);
+
         
         //var myGrid = new Asset('grid', 0, 0, 0, models.grid);
 
 /*        var dA = new Asset('da', 600*Math.random(), 400*Math.random(), 100*Math.random(), models.diamond, 30);
 
-
         var dB = new Asset('db', 100*Math.random(), 400*Math.random(), canvas.width/2, models.diamond, 30);*/
-
-
 /*        var dC = new Asset('db', canvas.width/2 -100, canvas.height/2 -300, 620, models.diamond, 25);*/
+
         canvas.addEventListener('mousedown', function() {
             dC.modelAttributes[dC.modelAttributes.length] = new explode_infinite(10, 300*Math.random(), 1);
         }, false);
@@ -56,6 +58,9 @@
 
         var fly2 = new Asset('fly', 500, 300, 500, models.fly, 12);
         fly2.sceneAttributes[0] = new house_fly(6, canvas.width);
+
+        var fly3 = new Asset('fly', 800, 400, 500, models.fly, 12);
+        fly3.sceneAttributes[0] = new house_fly(6, canvas.width);
 
 
         var sun = new Asset('sun', canvas.width-250, 100, 300, models.sun, 12);
@@ -73,6 +78,7 @@
         assets[30] = fly;
         assets[31] = fly2;
         assets[32] = sun;
+        assets[33] = fly3;
         //assets[33] = palm;
 
 /*        assets[31] = dB;

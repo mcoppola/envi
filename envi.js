@@ -1,9 +1,10 @@
 // 3D Canvas Enviroment, keeps dimentions 
 // and calculates scale of objects
-function Envi (context, width, height, size) {
+function Envi (context, width, height, size, dummyContext) {
 	if (size === undefined) { size = 500; }
 	this.depth = size;  // z depth
 	this.context = context;  // canvas context
+	this.dummyContext = dummyContext; // dummy for imgGrid
 	this.width = width;  // canvas pixel dimmentions
 	this.height = height;
 	this.shiftX = .5;  // perspective shift
@@ -120,5 +121,25 @@ Asset.prototype.doSceneAnimation = function (frame) {
 	this.xpos = point[0]/this.scale;
 	this.ypos = point[1]/this.scale;
 	this.zpos = point[2]/this.scale;
-
 }*/
+
+// -------------- IMAGE GRID HELPER -------------- //
+
+function imageGrid ( envi, image ) = { 
+	this.image = image;
+	this.grid = [];
+	this.data = function () {
+		var img = new Image();
+		img.src = this.source;
+		var context = document.getElementById('canvas').getContext('2d');
+		envi.dummyContext.drawImage(img, 0, 0);
+		for (var i = 0; i < img.width; i+=2){
+			grid[i] = ontext.getImageData(i, , 1, 1).data;
+			grid[i+1] = img.width
+		}
+				data = context.getImageData(x, y, 1, 1).data;
+	}();
+
+
+
+}
