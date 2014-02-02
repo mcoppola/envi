@@ -7,12 +7,13 @@ function Envi (context, width, height, size, dummyContext) {
 	this.dummyContext = dummyContext; // dummy for imgGrid
 	this.width = width;  // canvas pixel dimmentions
 	this.height = height;
-	this.shiftX = .5;  // perspective shift
-	this.shiftY = 1.5;  // starting conditions
+	this.shiftX = 1;  // perspective shift
+	this.shiftY = 1;  // starting conditions
 	this.font = 'sans-serif';
 	this.fontMax = 50; 
 	this.fontStyle = ''; // include space at end if using
 	this.frame = [this.width, this.height, this.depth];
+	this.printStyle = 'fill';
 }
 
 // Vanishing Point Perspective convertion
@@ -82,12 +83,15 @@ Asset.prototype.draw = function (envi) {
 		var charWithFont = envi.charToSize(point[3], point[2]);
 		envi.context.font = String(charWithFont[1].toString());
 		if (this.geo[i][4]) {
-			envi.context.strokeStyle = this.geo[i][4].toString();}
-		else {
-			envi.context.strokeStyle = '#000000'
+			/*envi.context.strokeStyle = this.geo[i][4].toString();*/
+			envi.context.fillStyle = this.geo[i][4].toString(); 
+		} else {
+			/*envi.context.strokeStyle = '#000000';*/
+			envi.context.fillStyle = '#000000';
 		}
-		//envi.context.strokeStyle = String(point[4].toString());
-		envi.context.strokeText(charWithFont[0], xy[0], xy[1]);
+		/*envi.context.strokeText(charWithFont[0], xy[0], xy[1]);*/
+		envi.context.fillText(charWithFont[0], xy[0], xy[1]);
+
 
 	}
 }
@@ -127,7 +131,9 @@ Asset.prototype.doSceneAnimation = function (frame) {
 // -------------- IMAGE GRID ----------------------------------------------- //
 
 function ImageGrid ( envi, image ) { 
+	this.envi = envi;
 	this.img = null;
+	this.grid = {};
 	this.sourceFile = image;
 	this.data = this.makeData();
 	this.geo = this.makeGeo();
@@ -137,39 +143,48 @@ ImageGrid.prototype.makeData = function () {
 	// get source file
 	this.img = new Image();
 	this.img.src = this.sourceFile;
-	this.img.width = 100;
-	this.img.height = 60;
-	console.log("this.img: " + this.img.src);
+	this.img.width = 1200;
+	this.img.height = 1000;
+	this.grid.width = this.img.width/12;
+	this.grid.height = this.img.height/12;  // hard coded ratio (1/8). fix!!!
+
 	// print it to dummy canvas
 	envi.dummyContext.drawImage(this.img, 0, 0);
 	// get the data
 	// width x height
+	console.log(envi.dummyContext.getImageData(600, 400, 1, 1).data);
 	var data = [];
-	console.log(envi.dummyContext);
-	for (var i = 1; i < this.img.width; i+=1) {
-		for(var j = 1; j < this.img.height; j+=1) {
-			data[i*j] = envi.dummyContext.getImageData(i, j, 1, 1).data;
+	for (var i = 1; i < this.grid.width; i+=1) { // hard coded ratio (1/8). fix!!!
+		for(var j = 1; j < this.grid.height; j+=1) {
+			data[i*j] = envi.dummyContext.getImageData(i*12, j*12, 1, 1).data;
 		}
 	}
 	return data;
 }
 
 ImageGrid.prototype.makeGeo = function (asci) {
-	console.log(this.data[50]);
 	if(typeof(asci) === 'undefined'){
-		asci = '.';
+		asci = 's';
 	}
 	var geo = []
-	for (var i = 1; i < this.img.width; i+=1) {
-		for(var j = 1; j < this.img.height; j+=1) {
-			geo[geo.length] =  ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
+	for (var i = 1; i < this.grid.width; i+=1) {
+		for(var j = 1; j < this.grid.height; j+=1) {
+			if(j == 20) {console.log(this.grid.width/Math.abs(i - this.grid.width/2)); }
+			// plug ins for z
+			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
+			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
+			geo[geo.length] =  ([i, j, this.grid.height/Math.abs(j - this.grid.height/2), asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
 	return geo;
 }
 
 ImageGrid.prototype.rgbToHex = function ( rgbaArray ) {
-    return "#" + this.componentToHex(rgbaArray[0]) + this.componentToHex(rgbaArray[1]) + this.componentToHex(rgbaArray[2]);
+	if (typeof(rgbaArray) === 'undefined'){
+		return '#000000'
+	} else {
+    	return "#" + this.componentToHex(rgbaArray[0]) + this.componentToHex(rgbaArray[1]) + this.componentToHex(rgbaArray[2]);
+    }
 }
 ImageGrid.prototype.componentToHex = function (c) {
     var hex = c.toString(16);
