@@ -7,15 +7,20 @@
   </head>
   <body>
     <canvas id='canvas'></canvas>
-    <canvas id='dummy'></canvas>
+    <canvas id='dummy' width="100" height="60"></canvas>
     <script src="utils.js"></script>
     <script src="envi.js"></script>
     <script src="animations.js"></script>
     <script src="models.js"></script>
+    <img id="kandy" src="kandinsky.jpg" alt="Kandinsky" width="100" height="60"> 
     <script>
       utils.setCanvas(window);
       window.onload = function () {
 
+        // ------------------ INITS ---------------------------------------------------------- //
+        //
+        // TODO
+        // a. move most to envi contstructer
         var Keyboard = {
             keys : {},
             keyPress : function (evt) {
@@ -32,7 +37,7 @@
         var canvas = document.getElementById('canvas'),
             dummyCanvas = document.getElementById('dummy'),
             context = canvas.getContext('2d'),
-            dummyContext = dummy.getConext('2d');
+            dummyContext = dummy.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         mouse = utils.captureMouse(canvas);
@@ -40,53 +45,43 @@
         var models = new Models();
         envi = new Envi(context, canvas.width, canvas.height, canvas.width, dummyContext);
 
-        
-        //var myGrid = new Asset('grid', 0, 0, 0, models.grid);
 
-/*        var dA = new Asset('da', 600*Math.random(), 400*Math.random(), 100*Math.random(), models.diamond, 30);
-
-        var dB = new Asset('db', 100*Math.random(), 400*Math.random(), canvas.width/2, models.diamond, 30);*/
-/*        var dC = new Asset('db', canvas.width/2 -100, canvas.height/2 -300, 620, models.diamond, 25);*/
-
-        canvas.addEventListener('mousedown', function() {
-            dC.modelAttributes[dC.modelAttributes.length] = new explode_infinite(10, 300*Math.random(), 1);
-        }, false);
+        // --------------- MAKE ASSETS ------------------------------------------------------- //
     
         
-        var fly = new Asset('fly', 300, 200, 800, models.fly, 12);
-        fly.sceneAttributes[0] = new house_fly(8, canvas.width);
+        var imageGrid = new ImageGrid( envi, "kandinsky.jpg");
+        var grid = new Asset('grid', 0, 0, 200, imageGrid.geo, 10);
 
-        var fly2 = new Asset('fly', 500, 300, 500, models.fly, 12);
-        fly2.sceneAttributes[0] = new house_fly(6, canvas.width);
-
-        var fly3 = new Asset('fly', 800, 400, 500, models.fly, 12);
-        fly3.sceneAttributes[0] = new house_fly(6, canvas.width);
+        /*canvas.addEventListener('mousedown', function() {
+            grid.modelAttributes[0] = new explode_infinite(100, 300*Math.random(), 1);
+            }, false);*/
 
 
-        var sun = new Asset('sun', canvas.width-250, 100, 300, models.sun, 12);
-        canvas.addEventListener('mousedown', function() {
-            sun.modelAttributes[0] = new explode_infinite(10, 300*Math.random(), 1);
-            }, false);
 
-
+        // --------------- LOAD ASSETS ------------------------------------------------------- //
+        //
+        // TODO
+        // a. integrate assets container into envi
+        // b. make it self apending
 
         var assets = [];
-        for(var i=0; i < 30; i+=1) {
+        /*for(var i=0; i < 30; i+=1) {
             assets[i]= new Asset('grass', canvas.width*2*Math.random() - 100, canvas.height - 50 - 5*Math.random(), canvas.width*Math.random() - 100, models.grass, 10)
-        }
+        }*/
 
-        assets[30] = fly;
-        assets[31] = fly2;
-        assets[32] = sun;
-        assets[33] = fly3;
-        //assets[33] = palm;
+        assets[0] = grid;
 
-/*        assets[31] = dB;
-        assets[32] = palm;*/
         
+
+        // --------------- MAKE SCENE ------------------------------------------------------- //
 
         scene = new Scene(envi, assets);
       
+        // --------------  DRAW FRAME ------------------------------------------------------- //
+        //
+        // TODO
+        // a. move debounce
+        // b. add envi behavior type
 
       (function drawFrame () {
         utils.getAnimationFrame();
@@ -110,8 +105,6 @@
         else { envi.shiftX -= 4.9}
         scene.play();
         //context.clearRect(0, 0, canvas.width, canvas.height);
-
-
       }());
     };
     </script>

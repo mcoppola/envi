@@ -5,7 +5,7 @@ function Models () {
 	this.box = [[0,0,0,'0'], [5,0,0,'0'], [5,5,0,'0'], [0,5,0,'0'],
 		[0,0,5,'0'], [5,0,5,'0'], [5,5,5,'0'], [0,5,5,'0']];
 
-	this.grid = [[0,0,100,'&'], [canvas.width,0,100,'&'], [0,canvas.height,100, '&'], 
+	this.container = [[0,0,100,'&'], [canvas.width,0,100,'&'], [0,canvas.height,100, '&'], 
 		[canvas.width,canvas.height,100,'&'], [0,0,200,'&'], [canvas.width,0,200,'&'], 
 		[0,canvas.height,200, '&'], [canvas.width,canvas.height,200,'&'], [0,0,300,'&'], 
 		[canvas.width,0,300,'&'], [0,canvas.height,300, '&'], [canvas.width,canvas.height,300,'&'], 
@@ -18,6 +18,19 @@ function Models () {
 		[0,canvas.height,800, '&'], [canvas.width,canvas.height,800,'&'], [0,0,900,'&'], 
 		[canvas.width,0,900,'&'], [0,canvas.height,900, '&'], [canvas.width,canvas.height,900,'&']];
 
+	// 2D grid
+	this.grid2D = function ( width, height, asci ) {
+		if(typeof asci === "undefined") {
+	        asci = '.';
+	    }
+		var grid = []
+		for (var i = 1; i < width; i+=1) {
+			for(var j = 0; j < height; j+=1) {
+				grid.append([i, j, 1, asci ])
+			}
+		}
+
+	}
 
 	// 10^3
 	this.diamond = [ 

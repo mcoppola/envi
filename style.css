@@ -13,3 +13,10 @@ body {
 	background-color: #fff;
 	display: block;
 }
+#dummy {
+	background-color: #fff;
+	display: none;
+}
+#kandy {
+	display: none;
+}

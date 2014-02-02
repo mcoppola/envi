@@ -51,7 +51,8 @@ Scene.prototype.play = function () {
 	}
 }
 
-// Object of Scene
+// -------------- ASSETS ----------------------------------------------- //
+// Objects of Scene
 function Asset (id, x, y, z, geometry, scale) {
 	if (geometry === undefined) { geometry = []; }
 	if (x === undefined) { x = 0; }
@@ -123,23 +124,54 @@ Asset.prototype.doSceneAnimation = function (frame) {
 	this.zpos = point[2]/this.scale;
 }*/
 
-// -------------- IMAGE GRID HELPER -------------- //
+// -------------- IMAGE GRID ----------------------------------------------- //
 
-function imageGrid ( envi, image ) = { 
-	this.image = image;
-	this.grid = [];
-	this.data = function () {
-		var img = new Image();
-		img.src = this.source;
-		var context = document.getElementById('canvas').getContext('2d');
-		envi.dummyContext.drawImage(img, 0, 0);
-		for (var i = 0; i < img.width; i+=2){
-			grid[i] = ontext.getImageData(i, , 1, 1).data;
-			grid[i+1] = img.width
+function ImageGrid ( envi, image ) { 
+	this.img = null;
+	this.sourceFile = image;
+	this.data = this.makeData();
+	this.geo = this.makeGeo();
+}
+
+ImageGrid.prototype.makeData = function () {
+	// get source file
+	this.img = new Image();
+	this.img.src = this.sourceFile;
+	this.img.width = 100;
+	this.img.height = 60;
+	console.log("this.img: " + this.img.src);
+	// print it to dummy canvas
+	envi.dummyContext.drawImage(this.img, 0, 0);
+	// get the data
+	// width x height
+	var data = [];
+	console.log(envi.dummyContext);
+	for (var i = 1; i < this.img.width; i+=1) {
+		for(var j = 1; j < this.img.height; j+=1) {
+			data[i*j] = envi.dummyContext.getImageData(i, j, 1, 1).data;
 		}
-				data = context.getImageData(x, y, 1, 1).data;
-	}();
+	}
+	return data;
+}
 
+ImageGrid.prototype.makeGeo = function (asci) {
+	console.log(this.data[50]);
+	if(typeof(asci) === 'undefined'){
+		asci = '.';
+	}
+	var geo = []
+	for (var i = 1; i < this.img.width; i+=1) {
+		for(var j = 1; j < this.img.height; j+=1) {
+			geo[geo.length] =  ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
+		}
+	}
+	return geo;
+}
 
-
+ImageGrid.prototype.rgbToHex = function ( rgbaArray ) {
+    return "#" + this.componentToHex(rgbaArray[0]) + this.componentToHex(rgbaArray[1]) + this.componentToHex(rgbaArray[2]);
+}
+ImageGrid.prototype.componentToHex = function (c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
 }
