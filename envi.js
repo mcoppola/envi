@@ -1,5 +1,10 @@
+// -------------- ENVI ------------------------------------------------ //
+//
 // 3D Canvas Enviroment, keeps dimentions 
 // and calculates scale of objects
+//
+// TODO
+// a. optimize
 function Envi (context, width, height, size, dummyContext) {
 	if (size === undefined) { size = 500; }
 	this.depth = size;  // z depth
@@ -13,7 +18,7 @@ function Envi (context, width, height, size, dummyContext) {
 	this.fontMax = 50; 
 	this.fontStyle = ''; // include space at end if using
 	this.frame = [this.width, this.height, this.depth];
-	this.printStyle = 'fill';
+	this.printStyle = 'fill'; // not using, TODO: use!
 }
 
 // Vanishing Point Perspective convertion
@@ -53,6 +58,7 @@ Scene.prototype.play = function () {
 }
 
 // -------------- ASSETS ----------------------------------------------- //
+//
 // Objects of Scene
 function Asset (id, x, y, z, geometry, scale) {
 	if (geometry === undefined) { geometry = []; }
@@ -82,6 +88,7 @@ Asset.prototype.draw = function (envi) {
 		var xy = envi.pointTo3D(point);
 		var charWithFont = envi.charToSize(point[3], point[2]);
 		envi.context.font = String(charWithFont[1].toString());
+		// TODO: make option for stroke or fill text
 		if (this.geo[i][4]) {
 			/*envi.context.strokeStyle = this.geo[i][4].toString();*/
 			envi.context.fillStyle = this.geo[i][4].toString(); 
@@ -129,12 +136,18 @@ Asset.prototype.doSceneAnimation = function (frame) {
 }*/
 
 // -------------- IMAGE GRID ----------------------------------------------- //
+//
+// An asset helper class to encorperate image files
+//
+// TODO
+// a. optimization 
+//		we know the grid has a point for every x and y, we dont have to read the array
 
-function ImageGrid ( envi, image ) { 
+function ImageGrid ( envi, file ) { 
 	this.envi = envi;
 	this.img = null;
 	this.grid = {};
-	this.sourceFile = image;
+	this.sourceFile = file;
 	this.data = this.makeData();
 	this.geo = this.makeGeo();
 }
@@ -145,18 +158,17 @@ ImageGrid.prototype.makeData = function () {
 	this.img.src = this.sourceFile;
 	this.img.width = 1200;
 	this.img.height = 1000;
-	this.grid.width = this.img.width/12;
-	this.grid.height = this.img.height/12;  // hard coded ratio (1/8). fix!!!
+	this.grid.width = this.img.width/24;
+	this.grid.height = this.img.height/24;  // hard coded ratio (1/24). fix!!!
 
 	// print it to dummy canvas
 	envi.dummyContext.drawImage(this.img, 0, 0);
 	// get the data
-	// width x height
 	console.log(envi.dummyContext.getImageData(600, 400, 1, 1).data);
 	var data = [];
-	for (var i = 1; i < this.grid.width; i+=1) { // hard coded ratio (1/8). fix!!!
+	for (var i = 1; i < this.grid.width; i+=1) { 
 		for(var j = 1; j < this.grid.height; j+=1) {
-			data[i*j] = envi.dummyContext.getImageData(i*12, j*12, 1, 1).data;
+			data[i*j] = envi.dummyContext.getImageData(i*24, j*24, 1, 1).data;  // hard coded ratio (1/24). fix!!!
 		}
 	}
 	return data;
@@ -164,27 +176,24 @@ ImageGrid.prototype.makeData = function () {
 
 ImageGrid.prototype.makeGeo = function (asci) {
 	if(typeof(asci) === 'undefined'){
-		asci = 's';
+		asci = 'o';
 	}
 	var geo = []
 	for (var i = 1; i < this.grid.width; i+=1) {
 		for(var j = 1; j < this.grid.height; j+=1) {
-			if(j == 20) {console.log(this.grid.width/Math.abs(i - this.grid.width/2)); }
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
-			geo[geo.length] =  ([i, j, this.grid.height/Math.abs(j - this.grid.height/2), asci, this.rgbToHex(this.data[i*j])])
+			geo[geo.length] = ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
+	console.log(geo.length);
 	return geo;
 }
 
 ImageGrid.prototype.rgbToHex = function ( rgbaArray ) {
-	if (typeof(rgbaArray) === 'undefined'){
-		return '#000000'
-	} else {
-    	return "#" + this.componentToHex(rgbaArray[0]) + this.componentToHex(rgbaArray[1]) + this.componentToHex(rgbaArray[2]);
-    }
+    return "#" + this.componentToHex(rgbaArray[0]) + this.componentToHex(rgbaArray[1]) + this.componentToHex(rgbaArray[2]);
+    
 }
 ImageGrid.prototype.componentToHex = function (c) {
     var hex = c.toString(16);
