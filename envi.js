@@ -184,7 +184,7 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
-			geo[geo.length] = ([i, j, 10*Math.random(), asci, this.rgbToHex(this.data[i*j])])
+			geo[geo.length] = ([i, j, this.grid.height/Math.abs(j - this.grid.height/2), asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
 	console.log(geo.length);
