@@ -187,9 +187,10 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			if(Math.random() > .2){ asci='.'}
 				else if (Math.random() < .2){ asci='o'}
 					else if (Math.random() < .2){ asci='a'}
-						else if (Math.random() < .2){ asci='i'}
-							else if (Math.random() > .2){ asci='*'}
-								else { asci='m'}
+						else if (Math.random() < .2){ asci='e'}
+							else if (Math.random() < .2){ asci='u'}
+								else if (Math.random() > .2){ asci='*'}
+									else { asci='#'}
 			geo[geo.length] = ([i, j, 10*Math.random(), asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
