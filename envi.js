@@ -155,6 +155,7 @@ function ImageGrid ( envi, file ) {
 ImageGrid.prototype.makeData = function () {
 	// get source file
 	this.img = new Image();
+	this.img.crossOrigin="anonymous";
 	this.img.src = this.sourceFile;
 	this.img.width = 1200;
 	this.img.height = 1000;
