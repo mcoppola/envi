@@ -19,6 +19,7 @@ function Envi (context, width, height, size, dummyContext) {
 	this.fontStyle = ''; // include space at end if using
 	this.frame = [this.width, this.height, this.depth];
 	this.printStyle = 'fill'; // not using, TODO: use!
+	this.resolutionFactor = 24;
 }
 
 // Vanishing Point Perspective convertion
@@ -158,8 +159,8 @@ ImageGrid.prototype.makeData = function () {
 	this.img.src = this.sourceFile;
 	this.img.width = 1200;
 	this.img.height = 1000;
-	this.grid.width = this.img.width/24;
-	this.grid.height = this.img.height/24;  // hard coded ratio (1/24). fix!!!
+	this.grid.width = this.img.width/this.envi.resolutionFactor;
+	this.grid.height = this.img.height/this.envi.resolutionFactor; 
 
 	// print it to dummy canvas
 	envi.dummyContext.drawImage(this.img, 0, 0);
@@ -168,7 +169,7 @@ ImageGrid.prototype.makeData = function () {
 	var data = [];
 	for (var i = 1; i < this.grid.width; i+=1) { 
 		for(var j = 1; j < this.grid.height; j+=1) {
-			data[i*j] = envi.dummyContext.getImageData(i*24, j*24, 1, 1).data;  // hard coded ratio (1/24). fix!!!
+			data[i*j] = envi.dummyContext.getImageData(i*this.envi.resolutionFactor, j*this.envi.resolutionFactor, 1, 1).data;  // hard coded ratio (1/24). fix!!!
 		}
 	}
 	return data;
@@ -176,7 +177,7 @@ ImageGrid.prototype.makeData = function () {
 
 ImageGrid.prototype.makeGeo = function (asci) {
 	if(typeof(asci) === 'undefined'){
-		asci = 'o';
+		asci = '+';
 	}
 	var geo = []
 	for (var i = 1; i < this.grid.width; i+=1) {
@@ -184,7 +185,7 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
-			geo[geo.length] = ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
+			geo[geo.length] = ([i, j, 10*Math.random(), asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
 	console.log(geo.length);
