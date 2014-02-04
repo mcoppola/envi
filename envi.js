@@ -176,7 +176,7 @@ ImageGrid.prototype.makeData = function () {
 
 ImageGrid.prototype.makeGeo = function (asci) {
 	if(typeof(asci) === 'undefined'){
-		asci = 'o';
+
 	}
 	var geo = []
 	for (var i = 1; i < this.grid.width; i+=1) {
@@ -184,6 +184,12 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
+			if(Math.random() > .2){ asci='.'}
+				else if (Math.random() < .2){ asci='o'}
+					else if (Math.random() < .2){ asci='a'}
+						else if (Math.random() < .2){ asci='i'}
+							else if (Math.random() > .2){ asci='*'}
+								else { asci='m'}
 			geo[geo.length] = ([i, j, 10*Math.random(), asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
