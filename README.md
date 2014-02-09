@@ -6,9 +6,9 @@ Javascript 3D ASCII Enviroment for Canvas
 
 use arrow keys to look around
 
-weeellll none of these work online - need to fix cross origin violation
-
 <a href="https://rawgithub.com/mcoppola832/envi/outside_scene/index.html">SUN</a>
+
+weeellll none of these work online - need to fix cross origin violation
 
 <a href="https://rawgithub.com/mcoppola832/envi/img-normal/index.html">IMG</a>
 
