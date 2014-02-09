@@ -148,7 +148,7 @@ ImageGrid.prototype.makeData = function () {
 	this.grid.width = this.img.width/this.envi.resolutionFactor;
 	this.grid.height = this.img.height/this.envi.resolutionFactor; 
 
-	// print it to dummy canvas
+	// print it to dummy Canvas
 	envi.dummyContext.drawImage(this.img, 0, 0);
 	// get the data
 	console.log(envi.dummyContext.getImageData(600, 400, 1, 1).data);
@@ -171,7 +171,7 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
-			geo[geo.length] = ([i, j, 10*Math.random(), asci, this.rgbToHex(this.data[i*j])])
+			geo[geo.length] = ([i, j, 20*Math.random(), asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
 	console.log(geo.length);
