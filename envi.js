@@ -44,11 +44,17 @@ Envi.prototype.charToSize = function (char, z) {
 
 // Scene contains all objects(assets)
 function Scene (envi, assets) {
-/*	if (assets === undefined) { assets = []; }*/
+	if (assets === undefined) { assets = []; }
 	this.envi = envi;
 	this.assets = assets;
 }
-
+Scene.prototype.add = function (newAsset) {
+	if (typeof(newAsset) === Array) {
+		this.assets = this.assets + newAsset;
+	} else {
+		this.assets[this.assets.length] = newAsset;
+	}
+}
 // Main game function
 Scene.prototype.play = function () {
 	// draw all assets in scene
@@ -104,37 +110,17 @@ Asset.prototype.draw = function (envi) {
 	}
 }
 Asset.prototype.setModelScale = function (point) {
-	var newPoint = [];
-	newPoint[0] = point[0]*this.scale; // geometry
-	newPoint[1] = point[1]*this.scale; // geometry
-	newPoint[2] = point[2]*this.scale; // geometry
-	newPoint[3] = point[3];
-	
-/*	if (point[4] === undefined) {newPoint[4] = '#000000'}
-		else { newPoint[4] = point[4] }*/
-	
-	return newPoint;
+	return [point[0]*this.scale, point[1]*this.scale, point[2]*this.scale, point[3]];
 }
 Asset.prototype.moveToScenePos = function (point) {
-	var newPoint = [];
-	for (var i = 0; i < this.pos.length; i+=1){ 
-		newPoint[i] = this.pos[i] + point[i]; // pos + geometry
-	}
-	newPoint[3] = point[3];
-	newPoint[4] = point[4];
-	return newPoint;
+	return [this.pos[0] + point[0], this.pos[1] + point[1], this.pos[2] + point[2], point[3], point[4]];
 }
 Asset.prototype.doSceneAnimation = function (frame) {
 	for (var i = 0; i < this.sceneAttributes.length; i+=1) {
 		this.sceneAttributes[i].processPoint(this, frame);
 	}
 }
-/*Asset.prototype.saveModelPos = function (pos) {
-	//console.log("point 0 : " + point[0].toString());
-	this.xpos = point[0]/this.scale;
-	this.ypos = point[1]/this.scale;
-	this.zpos = point[2]/this.scale;
-}*/
+
 
 // -------------- IMAGE GRID ----------------------------------------------- //
 //
