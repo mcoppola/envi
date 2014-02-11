@@ -4,10 +4,12 @@
 // and calculates scale of objects
 //
 // TODO
-// a. optimize
-function Envi (context, width, height, size, dummyContext) {
-	if (size === undefined) { size = 500; }
-	this.depth = size;  // z depth
+// - get imgGrid height width 
+// - imgGrid doesn't work with kandinsky3?
+// - optimize asset.draw()
+function Envi (context, width, height, depth, dummyContext) {
+	if (depth === undefined) { depth = 500; }
+	this.depth = depth;  // z
 	this.context = context;  // canvas context
 	this.dummyContext = dummyContext; // dummy for imgGrid
 	this.width = width;  // canvas pixel dimmentions
@@ -151,7 +153,6 @@ ImageGrid.prototype.makeData = function () {
 	// print it to dummy Canvas
 	envi.dummyContext.drawImage(this.img, 0, 0);
 	// get the data
-	console.log(envi.dummyContext.getImageData(600, 400, 1, 1).data);
 	var data = [];
 	for (var i = 1; i < this.grid.width; i+=1) { 
 		for(var j = 1; j < this.grid.height; j+=1) {
