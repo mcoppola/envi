@@ -5,7 +5,7 @@ function Frame (widht, height, depth) {
 
 }
 // ------------------------------------------------------------------------ //
-// MODEL ANIMATIONS
+// 		MODEL ANIMATIONS
 // ------------------------------------------------------------------------ //
 
 function explode_infinite (side, distance, scale, speed, state) {
@@ -40,7 +40,7 @@ explode_infinite.prototype.processPoint = function (frame, point, asset) {
 
 
 // ------------------------------------------------------------------------ //
-// SCENE ANIMATIONS
+// 		SCENE ANIMATIONS
 // ------------------------------------------------------------------------ //
 
 

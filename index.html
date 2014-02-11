@@ -20,7 +20,7 @@
         // ------------------ INITS ---------------------------------------------------------- //
         //
         // TODO
-        // a. move most to envi contstructer
+        // - move most to envi contstructer
         var Keyboard = {
             keys : {},
             keyPress : function (evt) {
@@ -63,6 +63,10 @@
         flyD.sceneAttributes[0] = new house_fly(3, canvas.width);
         var flyE = new Asset('fly', 700, 200, 900, models.planetC, 1);
         flyE.sceneAttributes[0] = new house_fly(2, canvas.width);
+        var flyF = new Asset('fly', 200, 200, 700, models.planetC, 1);
+        flyE.sceneAttributes[0] = new house_fly(3, canvas.width);
+        var flyG = new Asset('fly', 400, 600, 900, models.planetC, 1);
+        flyG.sceneAttributes[0] = new house_fly(3, canvas.width);
 
         var sun = new Asset('sun', canvas.width-250, 100, 800, models.sun, 12);
         canvas.addEventListener('mousedown', function() {
@@ -74,8 +78,8 @@
         // --------------- LOAD ASSETS ------------------------------------------------------- //
         //
         // TODO
-        // a. integrate assets container into envi
-        // b. make it self apending
+        // - integrate assets container into envi
+        // - make it capable of appending []
 
         var assets = [];
         /*for(var i=0; i < 30; i+=1) {
@@ -95,13 +99,15 @@
         scene.add(flyC);
         scene.add(flyD);
         scene.add(flyE);
+        scene.add(flyF);
+        scene.add(flyG);
         scene.add(sun);
       
         // --------------  DRAW FRAME ------------------------------------------------------- //
         //
         // TODO
-        // a. move debounce
-        // b. add envi behavior type
+        // - move debounce
+        // - add envi behavior type
 
       (function drawFrame () {
         utils.getAnimationFrame();

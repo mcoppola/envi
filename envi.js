@@ -129,7 +129,7 @@ Asset.prototype.doSceneAnimation = function (frame) {
 // An asset helper class to encorperate image files
 //
 // TODO
-// a. optimization 
+// - optimization 
 //		we know the grid has a point for every x and y, we dont have to read the array
 
 function ImageGrid ( envi, file ) { 
