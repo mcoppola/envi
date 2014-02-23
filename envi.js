@@ -14,14 +14,14 @@ function Envi (context, width, height, depth, dummyContext) {
 	this.dummyContext = dummyContext; // dummy for imgGrid
 	this.width = width;  // canvas pixel dimmentions
 	this.height = height;
-	this.shiftX = 1;  // perspective shift
+	this.shiftX = 1;  // perspÏective shift
 	this.shiftY = 1;  // starting conditions
 	this.font = 'sans-serif';
 	this.fontMax = 50; 
 	this.fontStyle = ''; // include space at end if using
 	this.frame = [this.width, this.height, this.depth];
 	this.printStyle = 'fill'; // not using, TODO: use!
-	this.resolutionFactor = 24;
+	this.resolutionFactor = 22;
 }
 
 // Vanishing Point Perspective convertion
@@ -38,10 +38,10 @@ Envi.prototype.doModelAnimation = function (point, asset) {
 }
 
 // Returns Array of Char and Font String
-Envi.prototype.charToSize = function (char, z) {
+Envi.prototype.charToSize = function (z) {
 	var fontSize = this.fontMax*((this.depth - z)/this.depth);
 	var fontString = Math.round(fontSize).toString() + 'px ';
-	return [String(char), String(this.fontStyle + fontString + this.font)];
+	return [this.fontStyle + fontString + this.font];
 }
 
 // Scene contains all objects(assets)
@@ -88,24 +88,16 @@ function Asset (id, x, y, z, geometry, scale) {
 
 Asset.prototype.draw = function (envi) {
 	this.doSceneAnimation(envi.frame);
+	var point = [];
 	for (i = 0; i < this.geo.length; i+=1) {
-		var point = [];
-		//console.log(this.geo[i][4]);
 		point = this.setModelScale(this.geo[i]);
 		point = envi.doModelAnimation(point, this);
 		point = this.moveToScenePos(point);
 		var xy = envi.pointTo3D(point);
-		var charWithFont = envi.charToSize(point[3], point[2]);
-		envi.context.font = String(charWithFont[1].toString());
+		var charWithFont = [point[3], envi.charToSize(point[2])];
+		envi.context.font = charWithFont[1];
+		envi.context.fillStyle = this.geo[i][4]; 
 		// TODO: make option for stroke or fill text
-		if (this.geo[i][4]) {
-			/*envi.context.strokeStyle = this.geo[i][4].toString();*/
-			envi.context.fillStyle = this.geo[i][4].toString(); 
-		} else {
-			/*envi.context.strokeStyle = '#000000';*/
-			envi.context.fillStyle = '#000000';
-		}
-		/*envi.context.strokeText(charWithFont[0], xy[0], xy[1]);*/
 		envi.context.fillText(charWithFont[0], xy[0], xy[1]);
 
 
@@ -145,12 +137,12 @@ ImageGrid.prototype.makeData = function () {
 	// get source file
 	this.img = new Image();
 	this.img.src = this.sourceFile;
-	this.img.width = 1200;
-	this.img.height = 1000;
 	this.grid.width = this.img.width/this.envi.resolutionFactor;
 	this.grid.height = this.img.height/this.envi.resolutionFactor; 
 
 	// print it to dummy Canvas
+	envi.dummyContext.width = this.img.width;
+	envi.dummyContext.height = this.img.height;
 	envi.dummyContext.drawImage(this.img, 0, 0);
 	// get the data
 	var data = [];
@@ -164,7 +156,7 @@ ImageGrid.prototype.makeData = function () {
 
 ImageGrid.prototype.makeGeo = function (asci) {
 	if(typeof(asci) === 'undefined'){
-		asci = '+';
+		asci = 'h';
 	}
 	var geo = []
 	for (var i = 1; i < this.grid.width; i+=1) {
@@ -172,7 +164,7 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
-			geo[geo.length] = ([i, j, 20*Math.random(), asci, this.rgbToHex(this.data[i*j])])
+			geo[geo.length] = ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
 	console.log(geo.length);

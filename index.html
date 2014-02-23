@@ -12,7 +12,7 @@
     <script src="envi.js"></script>
     <script src="animations.js"></script>
     <script src="models.js"></script>
-    <img id="kandy" src="kandinsky2.jpg" alt="Kandinsky" width="1200" height="1000"> 
+    <img id="kandy" src="kandinsky3.jpg" alt="Kandinsky" width="1200" height="1000"> 
     <script>
       utils.setCanvas(window);
       window.onload = function () {
@@ -32,7 +32,7 @@
             }
         };
         window.addEventListener("keydown", Keyboard.keyPress.bind(Keyboard));
-        window.addEventListener("keyup", Keyboard.keyRelease.bind(Keyboard));
+    window.addEventListener("keyup", Keyboard.keyRelease.bind(Keyboard));
 
         var canvas = document.getElementById('canvas'),
             dummyCanvas = document.getElementById('dummy'),
@@ -49,8 +49,8 @@
         // --------------- MAKE ASSETS ------------------------------------------------------- //
     
         
-        var imageGrid = new ImageGrid( envi, "kandinsky2.jpg");
-        var grid = new Asset('grid', -100, -300, 800, imageGrid.geo, 50);
+        var imageGrid = new ImageGrid( envi, "kandinsky3.jpg");
+        var grid = new Asset('grid', -400, -500, 750, imageGrid.geo, 38);
 
 
         var fly = new Asset('fly', 100, 200, 800, models.planet, 1);
@@ -69,9 +69,10 @@
         flyG.sceneAttributes[0] = new house_fly(3, canvas.width);
 
         var sun = new Asset('sun', canvas.width-250, 100, 800, models.sun, 12);
-        canvas.addEventListener('mousedown', function() {
-            sun.modelAttributes[0] = new explode_infinite(10, 300*Math.random(), 6);
-            }, false);
+        /*canvas.addEventListener('mousedown', function() {
+            grid.modelAttributes[0] = new planeXTransform(1000, 1, 1, 1);
+            }, false);*/
+
 
 
 
@@ -101,34 +102,33 @@
         scene.add(flyE);
         scene.add(flyF);
         scene.add(flyG);
-        scene.add(sun);
+        // scene.add(sun);
       
         // --------------  DRAW FRAME ------------------------------------------------------- //
         //
         // TODO
         // - move debounce
         // - add envi behavior type
-
-      (function drawFrame () {
         utils.getAnimationFrame();
+      (function drawFrame () {
         window.requestAnimationFrame(drawFrame, canvas);
 
         //Perspective without keyboard debounce
         if (Keyboard.keys[39] > 0) {
-            if(envi.shiftX < 2.2) { envi.shiftX += 0.025; }              
+            envi.shiftX += 0.025;               
           }
         if (Keyboard.keys[37] > 0) {
-            if(envi.shiftX > 0.0) { envi.shiftX -= 0.025; }  
+            envi.shiftX -= 0.025; 
         }
         if (Keyboard.keys[38] > 0) {
-            if(envi.shiftY > -0.5) { envi.shiftY -= 0.025; }
+            envi.shiftY -= 0.025;
         }
         if (Keyboard.keys[40] > 0) {
-            if(envi.shiftY < 2.4) { envi.shiftY += 0.025; }
+            envi.shiftY += 0.025; 
         }
 
-        if(envi.shiftX < 5) { envi.shiftX +=0.001;}
-        else { envi.shiftX -= 4.9}
+        /*if(envi.shiftX < 5) { envi.shiftX +=0.001;}
+        else { envi.shiftX -= 4.9}*/
         scene.play();
         //context.clearRect(0, 0, canvas.width, canvas.height);
       }());

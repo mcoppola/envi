@@ -37,6 +37,22 @@ explode_infinite.prototype.processPoint = function (frame, point, asset) {
 	return point;
 }
 
+function planeXTransform (distance, scale, speed, state) {
+	if (speed === undefined) { speed = 1 }
+	if (state === undefined) { state = 0 }
+	this.distance = distance;
+	this.scale = scale;
+	this.speed = speed;
+	this.state = state;
+}
+/*planeXTransform.prototype.processPoint = function (frame, point, asset) {
+	point[2] = Math.abs(frame.width/2 - point[0])/(frame.width/2)*this.distance;
+	if (this.state < this.distance) { 
+		this.state += 1*this.speed; 
+	}
+	return point;
+}
+*/
 
 
 // ------------------------------------------------------------------------ //
