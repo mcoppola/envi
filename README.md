@@ -6,14 +6,8 @@ Javascript 3D ASCII Enviroment for Canvas
 
 use arrow keys to look around
 
-<a href="https://rawgithub.com/mcoppola832/envi/outside_scene/index.html">SUN</a>
+<a href="https://rawgithub.com/mcoppola832/envi/outside_scene/index.html">Sun</a>
 
-weeellll none of these work online - need to fix cross origin violation
+<a href="https://googledrive.com/host/0B1KDVevzLxYpNkNxZ1hIZ0c4UnM/index.html">Shape</a>
 
-<a href="https://rawgithub.com/mcoppola832/envi/img-normal/index.html">IMG</a>
-
-<a href="https://rawgithub.com/mcoppola832/envi/img-random/index.html">IMG RANDOM</a>
-
-<a href="https://rawgithub.com/mcoppola832/envi/img-shape/index.html">IMG SHAPE A</a>
-
-<a href="https://rawgithub.com/mcoppola832/envi/img-shapeB/index.html">IMG SHAPE B</a>
+<a href="https://googledrive.com/host/0B1KDVevzLxYpaGJWRjhHZ3JCNTA/index.html">Random</a>
