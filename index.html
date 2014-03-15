@@ -7,12 +7,12 @@
   </head>
   <body>
     <canvas id='canvas'></canvas>
-    <canvas id='dummy' width="1200" height="1000"></canvas>
+    <canvas id='dummy' width="1110" height="555"></canvas>
     <script src="utils.js"></script>
     <script src="envi.js"></script>
     <script src="animations.js"></script>
     <script src="models.js"></script>
-    <img id="kandy" src="kandinsky3.jpg" alt="Kandinsky" width="1200" height="1000"> 
+    <img id="kandy" src="alex.jpg" alt="Kandinsky" width="1110" height="555"> 
     <script>
       utils.setCanvas(window);
       window.onload = function () {
@@ -49,12 +49,16 @@
         // --------------- MAKE ASSETS ------------------------------------------------------- //
     
         
-        var imageGrid = new ImageGrid( envi, "kandinsky3.jpg");
-        var grid = new Asset('grid', -400, -500, 750, imageGrid.geo, 38);
+        var imageGrid = new ImageGrid( envi, "alex.jpg");
+        var grid = new Asset('grid', -(canvas.width+150)/2, -400, 600, imageGrid.geo, 38);
+        grid.width = dummyCanvas.width;
+        grid.height = dummyCanvas.height;
 
 
         var fly = new Asset('fly', 100, 200, 800, models.planet, 1);
+
         fly.sceneAttributes[0] = new house_fly(4, canvas.width);
+
         var flyB = new Asset('fly', 600, 200, 600, models.planet, 1);
         flyB.sceneAttributes[0] = new house_fly(4, canvas.width);
         var flyC = new Asset('fly', 400, 200, 1000, models.planet, 1);
@@ -86,7 +90,7 @@
         /*for(var i=0; i < 30; i+=1) {
             assets[i]= new Asset('grass', canvas.width*2*Math.random() - 100, canvas.height - 50 - 5*Math.random(), canvas.width*Math.random() - 100, models.grass, 10)
         }*/
-
+        grid.modelAttributes[0] = new planeWave(1, 1, 10);
         assets[0] = grid;
 
         
@@ -95,13 +99,6 @@
 
         scene = new Scene(envi, assets);
 
-        scene.add(fly);
-        scene.add(flyB);
-        scene.add(flyC);
-        scene.add(flyD);
-        scene.add(flyE);
-        scene.add(flyF);
-        scene.add(flyG);
         // scene.add(sun);
       
         // --------------  DRAW FRAME ------------------------------------------------------- //
@@ -135,4 +132,7 @@
     };
     </script>
   </body>
+
+
+
   </html>

@@ -1,4 +1,4 @@
-function Frame (widht, height, depth) {
+function Frame (widht, height, depth) {	
 	this.width = width;
 	this.height = height;
 	this.depth = depth;
@@ -21,8 +21,7 @@ explode_infinite.prototype.processPoint = function (frame, point, asset) {
 			if (point[i] > this.side*asset.scale/2) {
 				point[i] = point[i] + this.scale*this.state;
 			} 
-			else if (point[i] == this.side*asset.scale/2) {
-
+			else if ( point[i] == this.side*asset.scale/2) {
 			}
 			else {
 				point[i] = point[i] - this.scale*this.state;
@@ -36,6 +35,8 @@ explode_infinite.prototype.processPoint = function (frame, point, asset) {
 	}
 	return point;
 }
+
+// ---- IMG GRID ---------------------------------------------------------- //
 
 function planeXTransform (distance, scale, speed, state) {
 	if (speed === undefined) { speed = 1 }
@@ -54,6 +55,26 @@ function planeXTransform (distance, scale, speed, state) {
 }
 */
 
+function planeWave (speed, width, depth) {
+	this.state = 1;
+	this.speed = speed;
+	this.width = width;
+	this.depth = depth;
+}
+planeWave.prototype.processPoint = function (frame, point, asset) {
+	if (point[0] == this.state) {
+		point[2] = point[2] + this.depth;
+	} else if ((point[0 + 1] == this.state) || point[0 - 1] == this.state) {
+		point[2] = point[2] + this.depth/2;
+	}
+	if (asset.width > this.state) {
+		this.state += 1*this.speed;
+	}
+	else {
+		this.state = 1;
+	}
+	return point;
+}
 
 // ------------------------------------------------------------------------ //
 // 		SCENE ANIMATIONS

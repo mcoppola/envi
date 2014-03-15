@@ -6,6 +6,7 @@
 // TODO
 // - get imgGrid height width 
 // - imgGrid doesn't work with kandinsky3?
+// 		- it does but only with <img> height and width specified
 // - optimize asset.draw()
 function Envi (context, width, height, depth, dummyContext) {
 	if (depth === undefined) { depth = 500; }
@@ -21,7 +22,7 @@ function Envi (context, width, height, depth, dummyContext) {
 	this.fontStyle = ''; // include space at end if using
 	this.frame = [this.width, this.height, this.depth];
 	this.printStyle = 'fill'; // not using, TODO: use!
-	this.resolutionFactor = 22;
+	this.resolutionFactor = 16;
 }
 
 // Vanishing Point Perspective convertion
@@ -39,9 +40,11 @@ Envi.prototype.doModelAnimation = function (point, asset) {
 
 // Returns Array of Char and Font String
 Envi.prototype.charToSize = function (z) {
-	var fontSize = this.fontMax*((this.depth - z)/this.depth);
-	var fontString = Math.round(fontSize).toString() + 'px ';
-	return [this.fontStyle + fontString + this.font];
+	if (z < this.depth){
+		var fontSize = this.fontMax*((this.depth - z)/this.depth);
+		var fontString = Math.round(fontSize).toString() + 'px ';
+		return [this.fontStyle + fontString + this.font];
+	} else { return [this.fontStyle + '0px' + this.font]; }
 }
 
 // Scene contains all objects(assets)
@@ -84,6 +87,8 @@ function Asset (id, x, y, z, geometry, scale) {
 	this.scale = scale;
 	this.modelAttributes = [];	
 	this.sceneAttributes = [];
+	this.width = undefined;  // for img Grid objects
+	this.height = undefined;
 }
 
 Asset.prototype.draw = function (envi) {
@@ -156,18 +161,26 @@ ImageGrid.prototype.makeData = function () {
 
 ImageGrid.prototype.makeGeo = function (asci) {
 	if(typeof(asci) === 'undefined'){
-		asci = 'h';
+		asci = 'o';
 	}
 	var geo = []
 	for (var i = 1; i < this.grid.width; i+=1) {
 		for(var j = 1; j < this.grid.height; j+=1) {
+
+/*			if(Math.random() > .2){ asci='.'}
+				else if (Math.random() < .2){ asci='o'}
+					else if (Math.random() < .2){ asci='a'}
+						else if (Math.random() < .2){ asci='e'}
+							else if (Math.random() < .2){ asci='u'}
+								else if (Math.random() > .2){ asci='*'}
+									else { asci='#'}*/
 			// plug ins for z
 			// this.grid.width/Math.abs(i - this.grid.width/2)  =  convex shape x
 			// this.grid.height/Math.abs(j - this.grid.height/2) = convex shape y
 			geo[geo.length] = ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
-	console.log(geo.length);
+	console.log(geo);
 	return geo;
 }
 
