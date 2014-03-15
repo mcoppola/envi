@@ -32,7 +32,7 @@
             }
         };
         window.addEventListener("keydown", Keyboard.keyPress.bind(Keyboard));
-    window.addEventListener("keyup", Keyboard.keyRelease.bind(Keyboard));
+        window.addEventListener("keyup", Keyboard.keyRelease.bind(Keyboard));
 
         var canvas = document.getElementById('canvas'),
             dummyCanvas = document.getElementById('dummy'),
@@ -49,13 +49,14 @@
         // --------------- MAKE ASSETS ------------------------------------------------------- //
     
         
-        var imageGrid = new ImageGrid( envi, "alex.jpg");
-        var grid = new Asset('grid', -(canvas.width+150)/2, -400, 600, imageGrid.geo, 38);
+        var grid = new ImageGrid( envi, "alex.jpg");
+        grid.toAsset(-(canvas.width+150)/2, -400, 600, 38);
         grid.width = dummyCanvas.width;
         grid.height = dummyCanvas.height;
+        grid.modelAttributes[0] = new planeWave(1, 1, 10);
 
 
-        var fly = new Asset('fly', 100, 200, 800, models.planet, 1);
+       /* var fly = new Asset('fly', 100, 200, 800, models.planet, 1);
 
         fly.sceneAttributes[0] = new house_fly(4, canvas.width);
 
@@ -70,7 +71,7 @@
         var flyF = new Asset('fly', 200, 200, 700, models.planetC, 1);
         flyE.sceneAttributes[0] = new house_fly(3, canvas.width);
         var flyG = new Asset('fly', 400, 600, 900, models.planetC, 1);
-        flyG.sceneAttributes[0] = new house_fly(3, canvas.width);
+        flyG.sceneAttributes[0] = new house_fly(3, canvas.width);*/
 
         var sun = new Asset('sun', canvas.width-250, 100, 800, models.sun, 12);
         /*canvas.addEventListener('mousedown', function() {
@@ -90,7 +91,7 @@
         /*for(var i=0; i < 30; i+=1) {
             assets[i]= new Asset('grass', canvas.width*2*Math.random() - 100, canvas.height - 50 - 5*Math.random(), canvas.width*Math.random() - 100, models.grass, 10)
         }*/
-        grid.modelAttributes[0] = new planeWave(1, 1, 10);
+        
         assets[0] = grid;
 
         

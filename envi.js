@@ -104,8 +104,6 @@ Asset.prototype.draw = function (envi) {
 		envi.context.fillStyle = this.geo[i][4]; 
 		// TODO: make option for stroke or fill text
 		envi.context.fillText(charWithFont[0], xy[0], xy[1]);
-
-
 	}
 }
 Asset.prototype.setModelScale = function (point) {
@@ -123,7 +121,7 @@ Asset.prototype.doSceneAnimation = function (frame) {
 
 // -------------- IMAGE GRID ----------------------------------------------- //
 //
-// An asset helper class to encorperate image files
+// An asset sub class to encorperate image files
 //
 // TODO
 // - optimization 
@@ -136,15 +134,59 @@ function ImageGrid ( envi, file ) {
 	this.sourceFile = file;
 	this.data = this.makeData();
 	this.geo = this.makeGeo();
+	this.asset;
 }
 
+// Extends ImageGrid to psuedo subclass Asset
+// (Contains all methods of Assets optimized for ImageGrid)
+ImageGrid.prototype.toAsset = function (x, y, z, scale) {
+	this.xpos = x;
+	this.ypos = y;
+	this.zpos = z;
+	this.pos = [x, y, z];
+	this.scale = scale;
+	this.modelAttributes = [];	
+	this.sceneAttributes = [];
+	this.width = this.img.width;
+	this.height = this.img.height;
+
+	// For ImageGrid we will make scale and position static
+	// thus eliminating the need to recalculate at every frame
+	var point, temp;
+	for (i = 0; i < this.geo.length; i+=1) {
+
+		point = this.geo[i];
+		// SET SCALE
+		temp = [point[0]*this.scale, point[1]*this.scale, point[2]*this.scale, point[3]];
+		// SET POSITION
+		temp = [this.xpos + temp[0], this.ypos + temp[1], this.zpos + temp[2], point[3], point[4]];
+		this.geo[i] = temp;
+	}
+	
+	this.draw = function () {
+		// Dynamic functions here
+		var tempPoint = [];  // don't rewrite point data, we need to keep original for doing animations
+		for (i = 0; i < this.geo.length; i+=1) {
+			tempPoint = this.geo[i];
+			/*for(var j = 0; j < this.modelAttributes.length; j+=1){
+				tempPoint = this.modelAttributes[i].processPoint(this.envi.frame, tempPoint, this);
+			}*/
+			var xy = this.envi.pointTo3D(tempPoint);
+			var charWithFont = [tempPoint[3], this.envi.charToSize(tempPoint[2])];
+			this.envi.context.font = charWithFont[1];
+			this.envi.context.fillStyle = tempPoint[4]; 
+			this.envi.context.fillText(charWithFont[0], xy[0], xy[1]);
+		}
+	}
+}
+
+	
 ImageGrid.prototype.makeData = function () {
 	// get source file
 	this.img = new Image();
 	this.img.src = this.sourceFile;
 	this.grid.width = this.img.width/this.envi.resolutionFactor;
 	this.grid.height = this.img.height/this.envi.resolutionFactor; 
-
 	// print it to dummy Canvas
 	envi.dummyContext.width = this.img.width;
 	envi.dummyContext.height = this.img.height;
@@ -180,7 +222,6 @@ ImageGrid.prototype.makeGeo = function (asci) {
 			geo[geo.length] = ([i, j, 1, asci, this.rgbToHex(this.data[i*j])])
 		}
 	}
-	console.log(geo);
 	return geo;
 }
 
