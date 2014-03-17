@@ -165,12 +165,13 @@ ImageGrid.prototype.toAsset = function (x, y, z, scale) {
 	
 	this.draw = function () {
 		// Dynamic functions here
-		var tempPoint = [];  // don't rewrite point data, we need to keep original for doing animations
-		for (i = 0; i < this.geo.length; i+=1) {
-			tempPoint = this.geo[i];
-			/*for(var j = 0; j < this.modelAttributes.length; j+=1){
-				tempPoint = this.modelAttributes[i].processPoint(this.envi.frame, tempPoint, this);
-			}*/
+		var animatedGeo = [];
+		for(var j = 0; j < this.modelAttributes.length; j+=1){
+			animatedGeo = this.modelAttributes[j].processGeo(this);
+		}
+		// Render text
+		for (i = 0; i < animatedGeo.length; i+=1) {
+			var tempPoint = animatedGeo[i]; // don't rewrite point data, we need to keep original for doing animations
 			var xy = this.envi.pointTo3D(tempPoint);
 			var charWithFont = [tempPoint[3], this.envi.charToSize(tempPoint[2])];
 			this.envi.context.font = charWithFont[1];

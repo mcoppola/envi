@@ -37,6 +37,8 @@ explode_infinite.prototype.processPoint = function (frame, point, asset) {
 }
 
 // ---- IMG GRID ---------------------------------------------------------- //
+//
+// animations will go through entire object by point
 
 function planeXTransform (distance, scale, speed, state) {
 	if (speed === undefined) { speed = 1 }
@@ -74,6 +76,27 @@ planeWave.prototype.processPoint = function (frame, point, asset) {
 		this.state = 1;
 	}
 	return point;
+}
+planeWave.prototype.processGeo = function (asset) {
+	var relState = this.state/asset.scale;
+	var newGeo = [];
+	for(var i = 0; i < asset.geo.length; i+=1) {
+		var point = asset.geo[i];
+		if (point[0] == relState) {
+			point[2] = point[2] + this.depth;
+		} else if ((point[0 + 1] == relState) || point[0 - 1] == relState) {
+			point[2] = point[2] + this.depth/2;
+		}
+		newGeo[newGeo.length] = [point];
+	}
+	if (asset.width > relState) {
+		this.state += 1*this.speed;
+	}
+	else {
+		this.state = 1;
+	}
+	return newGeo;
+
 }
 
 // ------------------------------------------------------------------------ //
